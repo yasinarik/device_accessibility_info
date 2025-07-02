@@ -1,11 +1,13 @@
 name: device_accessibility_info
-description: "A new Flutter plugin project."
+description: A Flutter plugin that provides information about device accessibility features, particularly screen reader status detection and real-time change notifications.
 version: 0.0.1
-homepage:
+homepage: https://github.com/yasinarik/device_accessibility_info
+repository: https://github.com/yasinarik/device_accessibility_info
+issue_tracker: https://github.com/yasinarik/device_accessibility_info/issues
 
 environment:
-  sdk: ">=3.4.4 <4.0.0"
-  flutter: ">=3.22.3"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
