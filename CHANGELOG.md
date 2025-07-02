@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.1] - 2024-12-19
+## [1.0.0] - 2024-12-19
+
+### 🎉 First Stable Release
+
+**Created by [Yasin Arik](https://linkedin.com/in/yasinarik)**
 
 ### Added
 - **Screen Reader Detection**: Check if VoiceOver (iOS) or TalkBack (Android) is currently enabled
@@ -15,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Listens to `UIAccessibility.voiceOverStatusDidChangeNotification` for changes
 - **Android Support**: 
   - Uses `AccessibilityManager` and system settings for TalkBack detection
-  - Monitors accessibility changes via `BroadcastReceiver` and `ContentObserver`
+  - Monitors accessibility changes via `AccessibilityStateChangeListener` and `ContentObserver`
 - **Comprehensive API**:
   - `isScreenReaderEnabled()` method for one-time status checks
   - `screenReaderStatusChanged` stream for real-time updates
@@ -33,3 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Uses event channels for streaming real-time changes
 - No additional permissions required on either platform
 - Proper resource cleanup and memory management
+- Tested on both iOS and Android devices
+
+### Publication Ready
+- Ready for pub.dev publication
+- Complete documentation and examples
+- Stable API design
+- Comprehensive testing

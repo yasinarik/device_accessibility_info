@@ -6,6 +6,8 @@
 
 A Flutter plugin that provides information about device accessibility features, particularly screen reader status detection and real-time change notifications.
 
+**Created by [Yasin Arik](https://linkedin.com/in/yasinarik)** 👨‍💻
+
 ## Features
 
 - ✅ **Screen Reader Detection**: Check if VoiceOver (iOS) or TalkBack (Android) is currently enabled
@@ -27,7 +29,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  device_accessibility_info: ^0.0.1
+  device_accessibility_info: ^1.0.0
 ```
 
 Then run:
@@ -195,7 +197,7 @@ A stream that emits screen reader status changes in real-time.
 
 **Platform behavior:**
 - **iOS**: Listens to `UIAccessibility.voiceOverStatusDidChangeNotification`
-- **Android**: Monitors accessibility settings changes via `BroadcastReceiver` and `ContentObserver`
+- **Android**: Monitors accessibility settings changes via `AccessibilityStateChangeListener` and `ContentObserver`
 
 ## Platform-Specific Information
 
@@ -270,6 +272,13 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 5. Run tests: `flutter test`
 6. Test on both platforms
 7. Submit a pull request
+
+## Author
+
+**Yasin Arik**  
+🔗 [LinkedIn](https://linkedin.com/in/yasinarik)  
+📧 [yasin.ariky@gmail.com](mailto:yasin.ariky@gmail.com)  
+🐙 [GitHub](https://github.com/yasinarik)
 
 ## License
 
