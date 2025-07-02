@@ -5,23 +5,63 @@ import 'package:device_accessibility_info/device_accessibility_info_method_chann
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelDeviceAccessibilityInfo platform = MethodChannelDeviceAccessibilityInfo();
-  const MethodChannel channel = MethodChannel('device_accessibility_info');
+  MethodChannelDeviceAccessibilityInfo platform =
+      MethodChannelDeviceAccessibilityInfo();
+  const MethodChannel methodChannel =
+      MethodChannel('device_accessibility_info/methods');
+  const EventChannel eventChannel =
+      EventChannel('device_accessibility_info/events');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      channel,
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      methodChannel,
       (MethodCall methodCall) async {
-        return '42';
+        switch (methodCall.method) {
+          case 'getPlatformVersion':
+            return '42';
+          case 'isScreenReaderEnabled':
+            return true;
+          default:
+            throw PlatformException(
+                code: 'UNIMPLEMENTED', message: 'Method not implemented');
+        }
       },
     );
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(methodChannel, null);
   });
 
   test('getPlatformVersion', () async {
     expect(await platform.getPlatformVersion(), '42');
+  });
+
+  test('isScreenReaderEnabled', () async {
+    expect(await platform.isScreenReaderEnabled(), true);
+  });
+
+  test('screenReaderStatusChanged stream', () async {
+    // Mock the event channel stream
+    const stream = [true, false, true];
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockStreamHandler(
+      eventChannel,
+      MockStreamHandler.inline(
+        onListen: (Object? arguments, MockStreamHandlerEventSink events) {
+          for (final event in stream) {
+            events.success(event);
+          }
+          events.endOfStream();
+        },
+      ),
+    );
+
+    final statusStream = platform.screenReaderStatusChanged;
+    final events = await statusStream.take(3).toList();
+    expect(events, [true, false, true]);
   });
 }

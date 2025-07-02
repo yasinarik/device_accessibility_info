@@ -8,7 +8,8 @@ abstract class DeviceAccessibilityInfoPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static DeviceAccessibilityInfoPlatform _instance = MethodChannelDeviceAccessibilityInfo();
+  static DeviceAccessibilityInfoPlatform _instance =
+      MethodChannelDeviceAccessibilityInfo();
 
   /// The default instance of [DeviceAccessibilityInfoPlatform] to use.
   ///
@@ -25,5 +26,18 @@ abstract class DeviceAccessibilityInfoPlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  /// Returns whether the screen reader (VoiceOver on iOS, TalkBack on Android) is currently enabled.
+  Future<bool> isScreenReaderEnabled() {
+    throw UnimplementedError(
+        'isScreenReaderEnabled() has not been implemented.');
+  }
+
+  /// Returns a stream that notifies when the screen reader status changes.
+  /// The stream emits `true` when screen reader is enabled, `false` when disabled.
+  Stream<bool> get screenReaderStatusChanged {
+    throw UnimplementedError(
+        'screenReaderStatusChanged has not been implemented.');
   }
 }
