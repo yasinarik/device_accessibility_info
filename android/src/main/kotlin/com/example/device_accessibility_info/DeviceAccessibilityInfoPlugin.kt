@@ -1,16 +1,13 @@
 package com.example.device_accessibility_info
 
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
-import android.text.TextUtils
+import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -37,11 +34,11 @@ class DeviceAccessibilityInfoPlugin: FlutterPlugin, MethodCallHandler, EventChan
     /// Event sink for streaming changes
     private var eventSink: EventChannel.EventSink? = null
     
-    /// Broadcast receiver for accessibility changes
-    private var accessibilityReceiver: BroadcastReceiver? = null
-    
     /// Content observer for accessibility services changes
     private var accessibilityServicesObserver: ContentObserver? = null
+    
+    /// AccessibilityStateChangeListener for API 14+
+    private var accessibilityStateChangeListener: AccessibilityManager.AccessibilityStateChangeListener? = null
     
     /// Handler for main thread operations
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -137,22 +134,12 @@ class DeviceAccessibilityInfoPlugin: FlutterPlugin, MethodCallHandler, EventChan
      * Start listening for accessibility changes
      */
     private fun startListening() {
-        // Listen for accessibility state changes
-        if (accessibilityReceiver == null) {
-            accessibilityReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    when (intent?.action) {
-                        AccessibilityManager.ACTION_ACCESSIBILITY_STATE_CHANGED -> {
-                            notifyAccessibilityChange()
-                        }
-                    }
-                }
+        // Listen for accessibility state changes using AccessibilityStateChangeListener
+        if (accessibilityStateChangeListener == null) {
+            accessibilityStateChangeListener = AccessibilityManager.AccessibilityStateChangeListener { enabled ->
+                notifyAccessibilityChange()
             }
-            
-            val filter = IntentFilter().apply {
-                addAction(AccessibilityManager.ACTION_ACCESSIBILITY_STATE_CHANGED)
-            }
-            context.registerReceiver(accessibilityReceiver, filter)
+            accessibilityManager.addAccessibilityStateChangeListener(accessibilityStateChangeListener!!)
         }
 
         // Listen for changes in enabled accessibility services
@@ -175,13 +162,9 @@ class DeviceAccessibilityInfoPlugin: FlutterPlugin, MethodCallHandler, EventChan
      * Stop listening for accessibility changes
      */
     private fun stopListening() {
-        accessibilityReceiver?.let {
-            try {
-                context.unregisterReceiver(it)
-            } catch (e: IllegalArgumentException) {
-                // Receiver was not registered, ignore
-            }
-            accessibilityReceiver = null
+        accessibilityStateChangeListener?.let {
+            accessibilityManager.removeAccessibilityStateChangeListener(it)
+            accessibilityStateChangeListener = null
         }
 
         accessibilityServicesObserver?.let {
